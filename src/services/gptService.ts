@@ -8,7 +8,7 @@ export async function summarizeText(
   transcript: string,
   prompt: string = 'Give bullet points highlighting key issues and events from the video.',
   maxWords: number = 200
-): Promise<string[]> {
+): Promise<string> {
   const completion = await openai.chat.completions.create({
     model: 'gpt-4',
     messages: [
@@ -24,8 +24,5 @@ export async function summarizeText(
   });
 
   const summaryText = completion.choices[0]?.message?.content || '';
-  return summaryText
-    .split('\n')
-    .map(line => line.trim())
-    .filter(line => line && !line.startsWith('```')); // cleanup formatting artifacts
+  return summaryText.trim();
 }

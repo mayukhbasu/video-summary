@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
   }
 
   try {
-    const maxWords = parseInt(words as string) || 200;
+    const maxWords = parseInt(words as string) || 2000;
     const result = await processVideoUrl(url, maxWords, prompt as string);
     res.json(result);
   } catch (err) {

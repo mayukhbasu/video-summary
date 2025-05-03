@@ -54,7 +54,6 @@ export async function processVideoUrl(
       jobId,
       title: `Summary for: ${url}`,
       summary,
-      clips,
     };
   } catch (err) {
     console.error(`[${jobId}] ❌ Error during processing:`, err);

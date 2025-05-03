@@ -27,21 +27,14 @@ export async function transcribeAudio(audioPath: string): Promise<string> {
         file: fs.createReadStream(audioPath),
       });
 
-      if (!response.text) {
-        throw new Error('Empty response from Whisper transcription.');
-      }
-
+      if (!response.text) throw new Error('Empty transcription response');
       return response.text;
     } catch (error: any) {
       console.error(`[Whisper] Error on attempt ${attempt}:`, error.message || error);
-
-      if (attempt === maxRetries) {
-        throw new Error('Transcription failed after maximum retries.');
-      }
-
-      await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+      if (attempt === maxRetries) throw new Error('Max transcription retries exceeded.');
+      await new Promise(res => setTimeout(res, 1000 * attempt));
     }
   }
 
-  throw new Error('Unhandled transcription failure.');
+  throw new Error('Unhandled Whisper error');
 }
