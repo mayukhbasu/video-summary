@@ -1,5 +1,5 @@
 # Use official Node.js slim image
-FROM node:18-slim AS base
+FROM node:18-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -14,23 +14,17 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy package files separately to leverage Docker caching
+# Copy package files and install dependencies
 COPY package*.json ./
+RUN npm install
 
-# Install only production dependencies
-RUN npm install --omit=dev
-
-# Copy the full source code
+# Copy source and build
 COPY . .
-
-# Build TypeScript files
 RUN npm run build
 
-# Expose port
-EXPOSE 3000
+# Use Cloud Run port
+ENV PORT=8080
+EXPOSE 8080
 
-# Set environment to production
-ENV NODE_ENV=production
-
-# Start the application
+# Start server
 CMD ["node", "dist/index.js"]
