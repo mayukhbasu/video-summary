@@ -4,18 +4,17 @@ import { processVideoUrl } from '../services/videoService';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const { url, words } = req.query;
+  const { url, words, prompt } = req.query;
   if (!url || typeof url !== 'string') {
     return res.status(400).json({ error: 'Missing video URL' });
   }
 
-  const maxWords = parseInt(words as string) || 200;
-
   try {
-    const result = await processVideoUrl(url, maxWords);
+    const maxWords = parseInt(words as string) || 200;
+    const result = await processVideoUrl(url, maxWords, prompt as string);
     res.json(result);
   } catch (err) {
-    console.error('Error in video processing route:', err);
+    console.error('Error in /analyze route:', err);
     res.status(500).json({ error: 'Failed to process video.' });
   }
 });
